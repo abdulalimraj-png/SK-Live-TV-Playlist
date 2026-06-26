@@ -1,0 +1,28 @@
+name: Auto Update Playlist
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # প্রতিদিন একবার আপডেট হবে
+  workflow_dispatch: # আপনি ম্যানুয়ালি বাটন ক্লিক করেও আপডেট করতে পারবেন
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update Playlist
+        run: |
+          # এখানে আপনার সেই লিঙ্কটি দিন যেখান থেকে আপনি ডেটা আনছেন
+          curl -L "https://raw.githubusercontent.com/abdulalimraj-png/SK-Live-TV-Playlist/refs/heads/main/My%20Playlist%20live%20tv.m3u8" -o My_Playlist_live_tv.m3u
+          
+      - name: Commit and Push
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add .
+          git commit -m "Auto updated playlist from source"
+          git push
